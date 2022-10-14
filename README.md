@@ -1,6 +1,12 @@
 # uploader
+Create a PostgresDB table from one or more CSV files.
 
-# Commands
+Optionally analyze the data prior to exporting.
+
+Built using Streamlit:
+https://docs.streamlit.io/library/api-reference
+
+# Installation
 ```
 pip install virtualenv
 sudo apt-get install virtualenv
@@ -19,5 +25,5 @@ source /workspaces/venv/bin/activate
 
 # Run
 ```
-streamlit run app.py --browser.gatherUsageStats=False --browser.serverAddress=https://narly-david-uploader-qpqwprxr97vf69jv.github.dev
+streamlit run app.py
 ```
