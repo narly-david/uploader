@@ -1,39 +1,31 @@
 import pandas as pd
+import pandas_profiling
 import streamlit as st
-
 from streamlit_pandas_profiling import st_profile_report
 
 from config import config
-
-
-def _analyze_data(uploaded_files):
-    for uploaded_file in uploaded_files:
-        # uploaded_file.read()
-        df = pd.read_csv(uploaded_file)
-        st.write("filename:", uploaded_file.name)
-        pr = df.profile_report()
-        st_profile_report(pr)
-
 
 st.set_page_config(layout="wide")
 st.title(config.PROJECT_NAME)
 st.text('Create a PostgresDB table from one or more CSV files.')
 st.text('Optionally analyze the data prior to exporting.')
 
+tab_upload, tab_analyze, tab_export= st.tabs(['Upload', 'Analyze', 'Export'])
+
 # UPLOAD DATA
-st.header('Upload')
-uploaded_files = st.file_uploader(
-    "Select CSV Files",
-    type=None,
-    accept_multiple_files=True,
-    key=None, help=None, on_change=None,
-    args=None, kwargs=None, disabled=False,
-    label_visibility="visible")
+with tab_upload:
+    st.header('Upload')
+    uploaded_files = st.file_uploader(
+        "Select CSV Files",
+        type=None,
+        accept_multiple_files=True,
+        key=None, help=None, on_change=None,
+        args=None, kwargs=None, disabled=False,
+        label_visibility="visible")
 
 # EXPORT DATA
-st.header('Export')
-
-with st.expander("Settings"):
+with tab_export:
+    st.header('Export')
     st.subheader('Database')
     st.selectbox(
         'Schema',
@@ -75,13 +67,15 @@ with st.expander("Settings"):
         key=None, help=None, on_change=None, args=None,
         kwargs=None, disabled=False, label_visibility="visible")
 
-st.button(
-    "Export to Database", key=None, help=None,
-    on_click=None, args=None, kwargs=None, disabled=False)
+    st.button(
+        "Export to Database", key=None, help=None,
+        on_click=None, args=None, kwargs=None, disabled=False)
 
 # ANALYZE DATA
-st.header('Analyze')
-report_profiler_button = st.button(
-    "Run Report Profiler", key=None, help=None,
-    on_click=_analyze_data(uploaded_files),
-    args=None, kwargs=None, disabled=False)
+with tab_analyze:
+    st.header('Analyze')
+    for uploaded_file in uploaded_files:
+        # uploaded_file.read()
+        df = pd.read_csv(uploaded_file)
+        pr = df.profile_report()
+        st_profile_report(pr)
